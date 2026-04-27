@@ -19,7 +19,7 @@ pkgs.mkShellNoCC {
       localstack
       terraform
       python3
-      awscli
+      awscli2
       terraform-local
     ])
     ++ (with nur; [
