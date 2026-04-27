@@ -1,5 +1,9 @@
 # Nix-specific commands
 
+## Preparation
+
+Change `/bin/bash` to `/bin/sh` in scripts and Makefile
+
 ## Installation
 
 Navigate to the source code directory:
@@ -11,5 +15,7 @@ cd source/
 Then, build the project using Nix:
 
 ```bash
-make SHELL=/bin/sh install
+make install
+
+make deploy
 ```
