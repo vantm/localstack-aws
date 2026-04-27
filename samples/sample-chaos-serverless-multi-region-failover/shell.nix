@@ -21,7 +21,7 @@ pkgs.mkShell {
       ${pkgs.git}/bin/git clone $REPO_URL ./source
     fi
 
-    if [ -d "$venvDir" ] ; then
+    if [ -d "${venvDir}" ] ; then
       echo "Skipping virtual environment creation, already exists at ${venvDir}";
     else
       echo "Creating virtual environment at ${venvDir}...";
