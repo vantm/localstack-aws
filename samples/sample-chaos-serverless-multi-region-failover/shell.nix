@@ -1,5 +1,6 @@
 {
-  pkgs ? import <nixpkgs> { },
+  inputs ? import ../../inputs.nix,
+  pkgs ? inputs.pkgs,
 }:
 let
   venvDir = "./.venv";
