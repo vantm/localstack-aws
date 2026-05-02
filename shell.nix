@@ -4,16 +4,12 @@
   nur ? inputs.nur,
 }:
 pkgs.mkShell {
-  packages =
-    (with pkgs; [
+  packages = (
+    with pkgs;
+    [
       terraform
-      terraform-local
-
       awscli2
-
       graphviz
-    ])
-    ++ (with nur; [
-      repos.anthonyroussel.awscli-local
-    ]);
+    ]
+  );
 }
