@@ -1,15 +1,13 @@
 resource "aws_lambda_function" "convert" {
   function_name = "convert-document"
 
-  runtime     = "python3.9"
-  handler     = "lambda_function.lambda_handler"
+  image_uri = "${aws_ecr_repository.convert.repository_url}:latest"
+  package_type = "Image"
+
   memory_size = 512
   timeout     = 30
 
-  role         = aws_iam_role.convert_lambda_role.arn
-
-  filename         = "lambda_convert.zip"
-  source_code_hash = filebase64sha256("lambda_convert.zip")
+  role = aws_iam_role.convert_lambda_role.arn
 
   environment {
     variables = {

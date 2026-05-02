@@ -1,15 +1,13 @@
 resource "aws_lambda_function" "watermark" {
   function_name = "watermark-document"
 
-  runtime     = "python3.9"
-  handler     = "lambda_function.lambda_handler"
+  image_uri = "${aws_ecr_repository.watermark.repository_url}:latest"
+  package_type = "Image"
+
   memory_size = 512
   timeout     = 30
 
-  role         = aws_iam_role.watermark_lambda_role.arn
-
-  filename         = "lambda_watermark.zip"
-  source_code_hash = filebase64sha256("lambda_watermark.zip")
+  role = aws_iam_role.watermark_lambda_role.arn
 
   environment {
     variables = {
