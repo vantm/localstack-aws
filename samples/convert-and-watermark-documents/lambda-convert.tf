@@ -12,7 +12,8 @@ resource "aws_lambda_function" "convert" {
   environment {
     variables = {
       OUTPUT_FORMAT = "pdf"
-      DYNAMO_TABLE = aws_dynamodb_table.documents.name
+      DYNAMO_TABLE  = aws_dynamodb_table.documents.name
+      S3_BUCKET     = aws_s3_bucket.convert_results.bucket
     }
   }
 }
@@ -40,6 +41,11 @@ resource "aws_iam_role_policy_attachment" "convert_lambda_logs" {
 resource "aws_iam_role_policy_attachment" "convert_lambda_dynamodb" {
   role       = aws_iam_role.convert_lambda_role.name
   policy_arn = aws_iam_policy.dynamodb_access.arn
+}
+
+resource "aws_iam_role_policy_attachment" "convert_lambda_s3" {
+  role       = aws_iam_role.convert_lambda_role.name
+  policy_arn = aws_iam_policy.s3_access.arn
 }
 
 resource "aws_lambda_permission" "api_gateway_convert" {

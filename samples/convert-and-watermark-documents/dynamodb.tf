@@ -1,6 +1,6 @@
 resource "aws_dynamodb_table" "documents" {
-  name           = "documents"
-  billing_mode   = "PAY_PER_REQUEST"
+  name         = "documents"
+  billing_mode = "PAY_PER_REQUEST"
   hash_key     = "id"
   range_key    = "created_at"
 
