@@ -2,11 +2,16 @@
 
 ## Commands
 
-- **Always use `tflocal`** instead of `terraform` (LocalStack wrapper)
+- **Always use `tflocal`** instead of `terraform` (MiniStack wrapper)
 - **Working directory**: `terraform/envs/dev/` — init, plan, apply all run from here
 - **Validate**: `tflocal validate` from `terraform/envs/dev/`
 - **Plan/apply** requires a running MiniStack instance
 - **Only touch the `dev` environment** — no staging/prod envs exist
+
+## Development
+
+- Project uses MiniStack to perform tests.
+- [MiniStack limitation](./MINISTACK.md)
 
 ## Architecture
 
@@ -35,12 +40,3 @@ Lambda functions are **container-based** (`package_type = "Image"`) pointing at 
 ## Variable flow
 
 Root `variables.tf` has defaults. Env-level `variables.tf` re-declares all vars **without** defaults (must be supplied). `terraform.tfvars` in `envs/dev/` sets actual values.
-
-## MiniStack quirks (relevant to this project)
-
-- **WAFv2 rules are stored but not enforced** — rate limits and managed rules won't actually block
-- **CloudWatch Lambda metrics not emitted** — the dashboard will show empty widgets (Invocations, Errors)
-- **API Gateway access logs not written** — log group exists but stays empty
-- **Cognito Lambda triggers** — not invoked (this project uses Cognito authorizer only, no triggers, so no impact)
-- Any access key/secret works (no SigV4 validation)
-- Default account: `000000000000`
