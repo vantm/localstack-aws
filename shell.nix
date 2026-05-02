@@ -1,6 +1,5 @@
 {
-  inputs ? import ./inputs.nix,
-  pkgs ? inputs.pkgs,
+  pkgs ? import ./pkgs.nix,
 }:
 pkgs.mkShell {
   name = "cloudstack";
