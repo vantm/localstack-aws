@@ -1,7 +1,7 @@
 resource "aws_lambda_function" "watermark" {
   function_name = "watermark-document"
 
-  image_uri = "${aws_ecr_repository.watermark.repository_url}:latest"
+  image_uri    = "${aws_ecr_repository.watermark.repository_url}:latest"
   package_type = "Image"
 
   memory_size = 512
@@ -41,5 +41,5 @@ resource "aws_lambda_permission" "api_gateway_watermark" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.watermark.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn   = "${aws_api_gateway_rest_api.gateway_api.execution_arn}/*/*"
+  source_arn    = "${aws_api_gateway_rest_api.gateway_api.execution_arn}/*/*"
 }

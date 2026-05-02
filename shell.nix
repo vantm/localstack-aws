@@ -10,6 +10,8 @@ pkgs.mkShell {
       terraform-local
 
       awscli2
+
+      graphviz
     ])
     ++ (with nur; [
       repos.anthonyroussel.awscli-local
