@@ -15,7 +15,7 @@ variable "api_gateway_stage_arn" {
   type        = string
 }
 
-variable "rate_limit" {
+variable "waf_rate_limit" {
   description = "Rate limit for RateLimitRule"
   type        = number
   default     = 100

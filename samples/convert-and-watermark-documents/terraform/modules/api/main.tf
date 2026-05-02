@@ -82,3 +82,67 @@ resource "aws_api_gateway_stage" "main" {
   rest_api_id   = aws_api_gateway_rest_api.gateway_api.id
   stage_name    = "prod"
 }
+
+resource "aws_cloudwatch_log_group" "api_gateway" {
+  name              = "/aws/apigateway/${var.api_name}"
+  retention_in_days = var.logs_retention_in_days
+}
+
+resource "aws_cloudwatch_dashboard" "main" {
+  dashboard_name = var.monitoring_dashboard_name
+
+  dashboard_body = jsonencode({
+    widgets = [
+      {
+        type = "metric"
+        properties = {
+          title = "Lambda Invocations"
+          metrics = [
+            ["AWS/Lambda", "Invocations", "FunctionName", var.convert_lambda_name, { stat = "Sum" }],
+            [".", "Invocations", "FunctionName", var.watermark_lambda_name, { stat = "Sum" }]
+          ]
+          period = 300
+          stat   = "Sum"
+          region = "us-east-1"
+        }
+      },
+      {
+        type = "metric"
+        properties = {
+          title = "Lambda Errors"
+          metrics = [
+            ["AWS/Lambda", "Errors", "FunctionName", var.convert_lambda_name, { stat = "Sum" }],
+            [".", "Errors", "FunctionName", var.watermark_lambda_name, { stat = "Sum" }]
+          ]
+          period = 300
+          stat   = "Sum"
+          region = "us-east-1"
+        }
+      },
+      {
+        type = "metric"
+        properties = {
+          title = "API Gateway Requests"
+          metrics = [
+            ["AWS/ApiGateway", "Count", "ApiName", var.api_name, "Stage", "prod", { stat = "Sum" }]
+          ]
+          period = 300
+          stat   = "Sum"
+          region = "us-east-1"
+        }
+      },
+      {
+        type = "metric"
+        properties = {
+          title = "API Gateway Latency"
+          metrics = [
+            ["AWS/ApiGateway", "Latency", "ApiName", var.api_name, "Stage", "prod", { stat = "p99" }]
+          ]
+          period = 300
+          stat   = "p99"
+          region = "us-east-1"
+        }
+      }
+    ]
+  })
+}

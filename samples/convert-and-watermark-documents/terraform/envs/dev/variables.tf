@@ -2,18 +2,6 @@ variable "aws_region" {
   type = string
 }
 
-variable "convert_results_bucket_name" {
-  type = string
-}
-
-variable "watermark_results_bucket_name" {
-  type = string
-}
-
-variable "s3_access_policy_name" {
-  type = string
-}
-
 variable "dynamodb_table_name" {
   type = string
 }
@@ -50,11 +38,11 @@ variable "authorizer_credentials_arn" {
   type = string
 }
 
-variable "dashboard_name" {
+variable "monitoring_dashboard_name" {
   type = string
 }
 
-variable "retention_in_days" {
+variable "logs_retention_in_days" {
   type = number
 }
 
@@ -66,6 +54,6 @@ variable "waf_description" {
   type = string
 }
 
-variable "rate_limit" {
+variable "waf_rate_limit" {
   type = number
 }

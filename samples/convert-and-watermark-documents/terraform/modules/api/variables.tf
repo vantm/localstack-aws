@@ -30,3 +30,25 @@ variable "authorizer_credentials_arn" {
   type        = string
   default     = "arn:aws:iam::123456789012:role/APIGatewayAuthorizerRole"
 }
+
+variable "convert_lambda_name" {
+  description = "Name of the convert Lambda function"
+  type        = string
+}
+
+variable "watermark_lambda_name" {
+  description = "Name of the watermark Lambda function"
+  type        = string
+}
+
+variable "logs_retention_in_days" {
+  description = "CloudWatch log retention in days"
+  type        = number
+  default     = 7
+}
+
+variable "monitoring_dashboard_name" {
+  description = "Name of the CloudWatch dashboard"
+  type        = string
+  default     = "documents-api-monitoring"
+}

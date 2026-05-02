@@ -1,11 +1,3 @@
-module "storage" {
-  source = "./modules/storage"
-
-  convert_results_bucket_name   = var.convert_results_bucket_name
-  watermark_results_bucket_name = var.watermark_results_bucket_name
-  s3_access_policy_name         = var.s3_access_policy_name
-}
-
 module "database" {
   source = "./modules/database"
 
@@ -20,17 +12,30 @@ module "auth" {
   user_pool_client_name = var.user_pool_client_name
 }
 
-module "functions" {
-  source = "./modules/functions"
+module "function_convert" {
+  source = "./modules/function"
 
-  dynamodb_table_name           = module.database.table_name
-  convert_results_bucket_name   = module.storage.convert_results_bucket_name
-  watermark_results_bucket_name = module.storage.watermark_results_bucket_name
-  dynamodb_access_policy_arn    = module.database.dynamodb_access_policy_arn
-  s3_access_policy_arn          = module.storage.s3_access_policy_arn
-  api_gateway_execution_arn     = module.api.execution_arn
-  watermark_text                = var.watermark_text
-  output_format                 = var.output_format
+  name                        = "convert"
+  dynamodb_table_name         = module.database.table_name
+  dynamodb_access_policy_arn  = module.database.dynamodb_access_policy_arn
+  api_gateway_execution_arn   = module.api.execution_arn
+  additional_env_vars = {
+    OUTPUT_FORMAT = var.output_format
+  }
+  logs_retention_in_days = var.logs_retention_in_days
+}
+
+module "function_watermark" {
+  source = "./modules/function"
+
+  name                        = "watermark"
+  dynamodb_table_name         = module.database.table_name
+  dynamodb_access_policy_arn  = module.database.dynamodb_access_policy_arn
+  api_gateway_execution_arn   = module.api.execution_arn
+  additional_env_vars = {
+    WATERMARK_TEXT = var.watermark_text
+  }
+  logs_retention_in_days = var.logs_retention_in_days
 }
 
 module "api" {
@@ -39,20 +44,13 @@ module "api" {
   api_name                    = var.api_name
   api_description             = var.api_description
   user_pool_arn               = module.auth.user_pool_arn
-  convert_lambda_invoke_arn   = module.functions.convert_lambda_invoke_arn
-  watermark_lambda_invoke_arn = module.functions.watermark_lambda_invoke_arn
+  convert_lambda_invoke_arn   = module.function_convert.lambda_invoke_arn
+  watermark_lambda_invoke_arn = module.function_watermark.lambda_invoke_arn
+  convert_lambda_name         = module.function_convert.lambda_name
+  watermark_lambda_name       = module.function_watermark.lambda_name
   authorizer_credentials_arn  = var.authorizer_credentials_arn
-}
-
-module "monitoring" {
-  source = "./modules/monitoring"
-
-  convert_lambda_name   = module.functions.convert_lambda_name
-  watermark_lambda_name = module.functions.watermark_lambda_name
-  api_name              = module.api.api_name
-  api_stage             = "prod"
-  dashboard_name        = var.dashboard_name
-  retention_in_days     = var.retention_in_days
+  logs_retention_in_days      = var.logs_retention_in_days
+  monitoring_dashboard_name   = var.monitoring_dashboard_name
 }
 
 module "security" {
@@ -61,5 +59,5 @@ module "security" {
   waf_name              = var.waf_name
   waf_description       = var.waf_description
   api_gateway_stage_arn = module.api.stage_arn
-  rate_limit            = var.rate_limit
+  waf_rate_limit        = var.waf_rate_limit
 }

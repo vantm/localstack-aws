@@ -3,11 +3,11 @@ output "api_url" {
 }
 
 output "convert_ecr_url" {
-  value = module.functions.convert_ecr_url
+  value = module.function_convert.ecr_url
 }
 
 output "watermark_ecr_url" {
-  value = module.functions.watermark_ecr_url
+  value = module.function_watermark.ecr_url
 }
 
 output "user_pool_id" {

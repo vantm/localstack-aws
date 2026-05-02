@@ -39,7 +39,7 @@ resource "aws_wafv2_web_acl" "api_protection" {
 
     statement {
       rate_based_statement {
-        limit              = var.rate_limit
+        limit              = var.waf_rate_limit
         aggregate_key_type = "IP"
       }
     }

@@ -11,21 +11,19 @@ Modular Terraform project that provisions a document conversion + watermarking A
 
 ```
 terraform/envs/dev/          ← entrypoint (terraform init/plan/apply here)
-terraform/                   ← root module, composes 7 submodules
-terraform/modules/           ← storage, database, functions, api, auth, monitoring, security
+terraform/                   ← root module, composes 5 submodules
+terraform/modules/           ← database, function, api, auth, security
 ```
 
-**7 modules** with strict output→input chains:
+**5 modules** with strict output→input chains:
 
-| Module     | Resources created                                                |
-| ---------- | ---------------------------------------------------------------- |
-| storage    | 2 S3 buckets, 1 IAM policy                                       |
-| database   | 1 DynamoDB table (hash=`id`, range=`created_at`), 1 IAM policy   |
-| auth       | 1 Cognito User Pool, 1 User Pool Client                          |
-| functions  | 2 Lambda (container/ECR), 2 ECR repos, 2 IAM roles, permissions  |
-| api        | REST API Gateway, /convert + /watermark POST, Cognito authorizer |
-| monitoring | 3 CloudWatch Log Groups, 1 Dashboard                             |
-| security   | 1 WAFv2 Web ACL (managed rules + rate limit), API association    |
+| Module     | Resources created                                                                  |
+| ---------- | ---------------------------------------------------------------------------------- |
+| database   | 1 DynamoDB table (hash=`id`, range=`created_at`), 1 IAM policy                     |
+| auth       | 1 Cognito User Pool, 1 User Pool Client                                            |
+| function   | 1 S3 bucket, 1 S3 IAM policy, 1 ECR repo, 1 Lambda (container/ECR), 1 IAM role, 1 CloudWatch log group |
+| api        | REST API Gateway, /convert + /watermark POST, Cognito authorizer, 1 CloudWatch log group, 1 Dashboard |
+| security   | 1 WAFv2 Web ACL (managed rules + rate limit), API association                      |
 
 Lambda functions are **container-based** (`package_type = "Image"`) pointing at ECR repos. No function code is defined in Terraform — images must be pushed separately.
 

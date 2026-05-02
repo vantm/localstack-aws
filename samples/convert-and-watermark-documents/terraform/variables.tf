@@ -4,25 +4,6 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-# Storage Variables
-variable "convert_results_bucket_name" {
-  description = "Name of the S3 bucket for conversion results"
-  type        = string
-  default     = "convert-results"
-}
-
-variable "watermark_results_bucket_name" {
-  description = "Name of the S3 bucket for watermark results"
-  type        = string
-  default     = "watermark-results"
-}
-
-variable "s3_access_policy_name" {
-  description = "Name of the IAM policy for S3 access"
-  type        = string
-  default     = "lambda-s3-access"
-}
-
 # Database Variables
 variable "dynamodb_table_name" {
   description = "Name of the DynamoDB table"
@@ -82,13 +63,13 @@ variable "authorizer_credentials_arn" {
 }
 
 # Monitoring Variables
-variable "dashboard_name" {
+variable "monitoring_dashboard_name" {
   description = "Name of the CloudWatch dashboard"
   type        = string
   default     = "documents-api-monitoring"
 }
 
-variable "retention_in_days" {
+variable "logs_retention_in_days" {
   description = "Retention period for log groups in days"
   type        = number
   default     = 7
@@ -107,7 +88,7 @@ variable "waf_description" {
   default     = "WAF Web ACL for API Gateway protection"
 }
 
-variable "rate_limit" {
+variable "waf_rate_limit" {
   description = "Rate limit for RateLimitRule"
   type        = number
   default     = 100
