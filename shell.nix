@@ -3,6 +3,7 @@
   pkgs ? inputs.pkgs,
 }:
 pkgs.mkShell {
+  name = "cloudstack";
   packages =
     with pkgs;
     [
