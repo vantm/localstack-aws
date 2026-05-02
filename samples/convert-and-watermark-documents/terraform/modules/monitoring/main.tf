@@ -21,7 +21,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       {
         type = "metric"
         properties = {
-          title  = "Lambda Invocations"
+          title = "Lambda Invocations"
           metrics = [
             ["AWS/Lambda", "Invocations", "FunctionName", var.convert_lambda_name, { stat = "Sum" }],
             [".", "Invocations", "FunctionName", var.watermark_lambda_name, { stat = "Sum" }]
@@ -34,7 +34,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       {
         type = "metric"
         properties = {
-          title  = "Lambda Errors"
+          title = "Lambda Errors"
           metrics = [
             ["AWS/Lambda", "Errors", "FunctionName", var.convert_lambda_name, { stat = "Sum" }],
             [".", "Errors", "FunctionName", var.watermark_lambda_name, { stat = "Sum" }]
@@ -47,7 +47,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       {
         type = "metric"
         properties = {
-          title  = "API Gateway Requests"
+          title = "API Gateway Requests"
           metrics = [
             ["AWS/ApiGateway", "Count", "ApiName", var.api_name, "Stage", var.api_stage, { stat = "Sum" }]
           ]
@@ -59,7 +59,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       {
         type = "metric"
         properties = {
-          title  = "API Gateway Latency"
+          title = "API Gateway Latency"
           metrics = [
             ["AWS/ApiGateway", "Latency", "ApiName", var.api_name, "Stage", var.api_stage, { stat = "p99" }]
           ]
