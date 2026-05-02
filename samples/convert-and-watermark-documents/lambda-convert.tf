@@ -12,6 +12,7 @@ resource "aws_lambda_function" "convert" {
   environment {
     variables = {
       OUTPUT_FORMAT = "pdf"
+      DYNAMO_TABLE = aws_dynamodb_table.documents.name
     }
   }
 }
@@ -34,6 +35,11 @@ resource "aws_iam_role" "convert_lambda_role" {
 resource "aws_iam_role_policy_attachment" "convert_lambda_logs" {
   role       = aws_iam_role.convert_lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "convert_lambda_dynamodb" {
+  role       = aws_iam_role.convert_lambda_role.name
+  policy_arn = aws_iam_policy.dynamodb_access.arn
 }
 
 resource "aws_lambda_permission" "api_gateway_convert" {

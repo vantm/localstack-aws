@@ -12,6 +12,7 @@ resource "aws_lambda_function" "watermark" {
   environment {
     variables = {
       WATERMARK_TEXT = "CONFIDENTIAL"
+      DYNAMO_TABLE   = aws_dynamodb_table.documents.name
     }
   }
 }
@@ -34,6 +35,11 @@ resource "aws_iam_role" "watermark_lambda_role" {
 resource "aws_iam_role_policy_attachment" "watermark_lambda_logs" {
   role       = aws_iam_role.watermark_lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "watermark_lambda_dynamodb" {
+  role       = aws_iam_role.watermark_lambda_role.name
+  policy_arn = aws_iam_policy.dynamodb_access.arn
 }
 
 resource "aws_lambda_permission" "api_gateway_watermark" {
