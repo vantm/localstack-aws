@@ -5,11 +5,6 @@
 - **Working directory**: `terraform/envs/dev/` — init, plan, apply all run from here
 - **Only touch the `dev` environment** — no staging/prod envs exist
 
-## Development
-
-- Project uses MiniStack to perform tests.
-- [MiniStack limitation](./MINISTACK.md)
-
 ## Architecture
 
 Modular Terraform project that provisions a document conversion + watermarking API on AWS/LocalStack.
