@@ -27,6 +27,7 @@ type ConvertResponse struct {
 
 type AppConfig struct {
 	Region   string
+	Profile  string
 	Endpoint string
 	Bucket   string
 }
@@ -34,6 +35,7 @@ type AppConfig struct {
 func loadConfig() AppConfig {
 	return AppConfig{
 		Region:   getEnv("AWS_REGION", "us-east-1"),
+		Profile:  getEnv("AWS_PROFILE", ""),
 		Endpoint: os.Getenv("AWS_ENDPOINT"),
 		Bucket:   getEnv("S3_BUCKET", "convert-app-files"),
 	}
@@ -47,9 +49,14 @@ func getEnv(key, fallback string) string {
 }
 
 func newS3Client(cfg AppConfig) (*s3.Client, error) {
-	awsCfg, err := config.LoadDefaultConfig(context.Background(),
+	loadOpts := []func(*config.LoadOptions) error{
 		config.WithRegion(cfg.Region),
-	)
+	}
+	if cfg.Profile != "" {
+		loadOpts = append(loadOpts, config.WithSharedConfigProfile(cfg.Profile))
+	}
+
+	awsCfg, err := config.LoadDefaultConfig(context.Background(), loadOpts...)
 	if err != nil {
 		return nil, fmt.Errorf("load aws config: %w", err)
 	}
@@ -110,7 +117,7 @@ func main() {
 		log.Fatalf("failed to create S3 client: %v", err)
 	}
 
-	log.Printf("S3 bucket: %s, region: %s, endpoint: %s", cfg.Bucket, cfg.Region, cfg.Endpoint)
+	log.Printf("S3 bucket: %s, region: %s, profile: %s, endpoint: %s", cfg.Bucket, cfg.Region, cfg.Profile, cfg.Endpoint)
 
 	http.HandleFunc("/convert", convertHandler(s3c, cfg.Bucket))
 	log.Fatal(http.ListenAndServe(":5001", nil))
