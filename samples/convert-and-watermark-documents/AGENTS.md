@@ -2,10 +2,7 @@
 
 ## Commands
 
-- **Always use `tflocal`** instead of `terraform` (MiniStack wrapper)
 - **Working directory**: `terraform/envs/dev/` — init, plan, apply all run from here
-- **Validate**: `tflocal validate` from `terraform/envs/dev/`
-- **Plan/apply** requires a running MiniStack instance
 - **Only touch the `dev` environment** — no staging/prod envs exist
 
 ## Development
@@ -18,7 +15,7 @@
 Modular Terraform project that provisions a document conversion + watermarking API on AWS/LocalStack.
 
 ```
-terraform/envs/dev/          ← entrypoint (tflocal init/plan/apply here)
+terraform/envs/dev/          ← entrypoint (terraform init/plan/apply here)
 terraform/                   ← root module, composes 7 submodules
 terraform/modules/           ← storage, database, functions, api, auth, monitoring, security
 ```
