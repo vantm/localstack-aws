@@ -1,7 +1,6 @@
-# WAF Web ACL for API Gateway protection
 resource "aws_wafv2_web_acl" "api_protection" {
-  name        = "api-protection-waf"
-  description = "WAF Web ACL for API Gateway protection"
+  name        = var.waf_name
+  description = var.waf_description
   scope       = "REGIONAL"
 
   default_action {
@@ -40,7 +39,7 @@ resource "aws_wafv2_web_acl" "api_protection" {
 
     statement {
       rate_based_statement {
-        limit              = 100
+        limit              = var.rate_limit
         aggregate_key_type = "IP"
       }
     }
@@ -53,16 +52,13 @@ resource "aws_wafv2_web_acl" "api_protection" {
   }
 
   visibility_config {
-    metric_name                = "api-protection-waf"
+    metric_name                = var.waf_name
     sampled_requests_enabled   = true
     cloudwatch_metrics_enabled = true
   }
 }
 
-# Associate WAF with API Gateway
 resource "aws_wafv2_web_acl_association" "api_gateway" {
-  resource_arn = aws_api_gateway_stage.main.arn
+  resource_arn = var.api_gateway_stage_arn
   web_acl_arn  = aws_wafv2_web_acl.api_protection.arn
-
-  depends_on = [aws_api_gateway_stage.main]
 }

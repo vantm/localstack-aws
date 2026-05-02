@@ -1,6 +1,5 @@
-# Cognito User Pool for API authentication
 resource "aws_cognito_user_pool" "documents_pool" {
-  name = "documents-user-pool"
+  name = var.user_pool_name
 
   password_policy {
     minimum_length    = 8
@@ -16,9 +15,8 @@ resource "aws_cognito_user_pool" "documents_pool" {
   }
 }
 
-# Cognito User Pool Client
 resource "aws_cognito_user_pool_client" "documents_client" {
-  name            = "documents-api-client"
+  name            = var.user_pool_client_name
   user_pool_id    = aws_cognito_user_pool.documents_pool.id
   generate_secret = false
   token_validity_units {

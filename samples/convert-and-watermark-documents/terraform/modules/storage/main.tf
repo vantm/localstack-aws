@@ -1,13 +1,13 @@
 resource "aws_s3_bucket" "convert_results" {
-  bucket = "convert-results"
+  bucket = var.convert_results_bucket_name
 }
 
 resource "aws_s3_bucket" "watermark_results" {
-  bucket = "watermark-results"
+  bucket = var.watermark_results_bucket_name
 }
 
 resource "aws_iam_policy" "s3_access" {
-  name = "lambda-s3-access"
+  name = var.s3_access_policy_name
 
   policy = jsonencode({
     Version = "2012-10-17"
