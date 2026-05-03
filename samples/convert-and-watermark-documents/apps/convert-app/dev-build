@@ -1,0 +1,4 @@
+#!/bin/sh
+docker buildx build --platform linux/amd64 --provenance=false -t convert-app-lambda:latest .
+docker tag convert-app-lambda:latest 000000000000.dkr.ecr.us-east-1.amazonaws.com/convert-document:latest
+

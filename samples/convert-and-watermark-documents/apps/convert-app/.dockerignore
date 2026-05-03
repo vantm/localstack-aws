@@ -1,0 +1,6 @@
+.envrc
+shell.nix
+convert
+convert-app
+.git
+dev-*

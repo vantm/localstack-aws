@@ -1,0 +1,12 @@
+#!/bin/sh
+docker run \
+    --rm -p 9000:8080 \
+    --platform linux/amd64 \
+    -v $HOME/.aws:/root/.aws:ro \
+    -e AWS_PROFILE=local \
+    -e AWS_ENDPOINT_URL=http://host.docker.internal:4566 \
+    -e AWS_USE_PATH_STYLE_ENDPOINT=true \
+    -e DEVTEST=true \
+    --entrypoint /usr/local/bin/aws-lambda-rie \
+    --add-host=host.docker.internal:host-gateway \
+    convert-app-lambda:latest ./main

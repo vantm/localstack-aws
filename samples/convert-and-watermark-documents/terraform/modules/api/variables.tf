@@ -28,7 +28,6 @@ variable "watermark_lambda_invoke_arn" {
 variable "authorizer_credentials_arn" {
   description = "ARN of the role for API Gateway Authorizer credentials"
   type        = string
-  default     = "arn:aws:iam::123456789012:role/APIGatewayAuthorizerRole"
 }
 
 variable "convert_lambda_name" {
