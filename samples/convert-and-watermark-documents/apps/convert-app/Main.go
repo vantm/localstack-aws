@@ -14,7 +14,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
@@ -30,21 +29,16 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
-func convertHandler(ctx context.Context, event events.APIGatewayProxyRequest) error {
+func convertHandler(ctx context.Context, event json.RawMessage) error {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Printf("Failed to load AWS SDK config: %v", err)
 		return err
 	}
-	body := event.Body
-	if body == "" {
-		raw, _ := json.Marshal(event)
-		body = string(raw)
-	}
 
-	log.Printf("Trying to parse JSON from body: %s", body)
 	var req ConvertRequest
-	if err := json.NewDecoder(strings.NewReader(body)).Decode(&req); err != nil {
+	if err := json.Unmarshal(event, &req); err != nil {
+		log.Printf("Failed to unmarshal event: %v", err)
 		return err
 	}
 
