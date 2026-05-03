@@ -1,0 +1,15 @@
+aws_region                  = "us-east-1"
+dynamodb_table_name         = "documents"
+dynamodb_access_policy_name = "lambda-dynamodb-access"
+user_pool_name              = "documents-user-pool"
+user_pool_client_name       = "documents-api-client"
+watermark_text              = "CONFIDENTIAL"
+output_format               = "pdf"
+api_name                    = "documents-converter-api"
+api_description             = "API Gateway for document conversion and watermarking service"
+authorizer_credentials_arn  = "arn:aws:iam::000000000000:role/APIGatewayAuthorizerRole"
+monitoring_dashboard_name   = "documents-api-monitoring"
+logs_retention_in_days      = 7
+waf_name                    = "api-protection-waf"
+waf_description             = "WAF Web ACL for API Gateway protection"
+waf_rate_limit              = 100
