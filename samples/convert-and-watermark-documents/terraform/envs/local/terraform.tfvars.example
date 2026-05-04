@@ -1,6 +1,6 @@
-environment                 = "dev"
+environment                 = "ministack"
 project_name                = "document-app"
-aws_region                  = "ap-southeast-1"
+aws_region                  = "us-east-1"
 dynamodb_table_name         = "documents"
 dynamodb_access_policy_name = "lambda-dynamodb-access"
 user_pool_name              = "documents-user-pool"
