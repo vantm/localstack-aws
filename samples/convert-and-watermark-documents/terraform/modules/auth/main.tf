@@ -23,4 +23,7 @@ resource "aws_cognito_user_pool_client" "documents_client" {
   access_token_validity  = 15
   refresh_token_validity = 6
   id_token_validity      = 15
+
+  callback_urls = var.callback_urls
+  logout_urls   = var.logout_urls
 }

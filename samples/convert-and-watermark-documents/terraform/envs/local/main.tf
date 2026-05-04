@@ -8,6 +8,8 @@ module "root" {
   dynamodb_access_policy_name = var.dynamodb_access_policy_name
   user_pool_name              = var.user_pool_name
   user_pool_client_name       = var.user_pool_client_name
+  callback_urls               = var.callback_urls
+  logout_urls                 = var.logout_urls
   watermark_text              = var.watermark_text
   output_format               = var.output_format
   api_name                    = var.api_name

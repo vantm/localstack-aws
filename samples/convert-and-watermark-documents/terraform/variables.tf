@@ -62,6 +62,18 @@ variable "user_pool_client_name" {
   default     = "documents-api-client"
 }
 
+variable "callback_urls" {
+  description = "List of allowed callback URLs for the Cognito app client"
+  type        = list(string)
+  default     = ["https://localhost"]
+}
+
+variable "logout_urls" {
+  description = "List of allowed logout URLs for the Cognito app client"
+  type        = list(string)
+  default     = ["https://localhost"]
+}
+
 # Functions Variables
 variable "watermark_text" {
   description = "Text to use for watermarking"

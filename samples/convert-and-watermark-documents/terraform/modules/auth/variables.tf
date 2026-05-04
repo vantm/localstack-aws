@@ -9,3 +9,15 @@ variable "user_pool_client_name" {
   type        = string
   default     = "documents-api-client"
 }
+
+variable "callback_urls" {
+  description = "List of allowed callback URLs for the app client"
+  type        = list(string)
+  default     = ["https://localhost"]
+}
+
+variable "logout_urls" {
+  description = "List of allowed logout URLs for the app client"
+  type        = list(string)
+  default     = ["https://localhost"]
+}
