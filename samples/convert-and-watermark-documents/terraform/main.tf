@@ -30,10 +30,10 @@ module "sqs" {
 module "function_convert" {
   source = "./modules/function"
 
-  name                        = "convert"
-  dynamodb_table_name         = module.database.table_name
-  dynamodb_access_policy_arn  = module.database.dynamodb_access_policy_arn
-  api_gateway_execution_arn   = module.api.execution_arn
+  name                       = "convert"
+  dynamodb_table_name        = module.database.table_name
+  dynamodb_access_policy_arn = module.database.dynamodb_access_policy_arn
+  api_gateway_execution_arn  = module.api.execution_arn
   additional_env_vars = {
     OUTPUT_FORMAT = var.output_format
   }
@@ -52,10 +52,11 @@ module "function_convert" {
 module "function_watermark" {
   source = "./modules/function"
 
-  name                        = "watermark"
-  dynamodb_table_name         = module.database.table_name
-  dynamodb_access_policy_arn  = module.database.dynamodb_access_policy_arn
-  api_gateway_execution_arn   = module.api.execution_arn
+  name                       = "watermark"
+  sqs_event_source_arn       = module.sqs.queue_arn
+  dynamodb_table_name        = module.database.table_name
+  dynamodb_access_policy_arn = module.database.dynamodb_access_policy_arn
+  api_gateway_execution_arn  = module.api.execution_arn
   additional_env_vars = {
     WATERMARK_TEXT = var.watermark_text
   }
@@ -70,11 +71,6 @@ module "function_watermark" {
       policy_arn = module.bucket_watermark.policy_arn
     }
   ]
-  sqs_queues = [{
-    name       = module.sqs.queue_name
-    url        = module.sqs.queue_url
-    policy_arn = module.sqs.policy_arn
-  }]
 }
 
 module "api" {

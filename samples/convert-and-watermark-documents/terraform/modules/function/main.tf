@@ -90,6 +90,13 @@ resource "aws_lambda_permission" "api_gateway" {
   source_arn    = "${var.api_gateway_execution_arn}/*/*"
 }
 
+resource "aws_lambda_event_source_mapping" "sqs" {
+  count = var.sqs_event_source_arn != null ? 1 : 0
+
+  event_source_arn = var.sqs_event_source_arn
+  function_name    = aws_lambda_function.function.arn
+}
+
 resource "aws_cloudwatch_log_group" "function" {
   name              = "/aws/lambda/${var.name}-document"
   retention_in_days = var.logs_retention_in_days

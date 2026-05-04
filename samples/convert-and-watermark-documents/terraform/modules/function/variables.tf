@@ -51,6 +51,12 @@ variable "s3_buckets" {
   default = []
 }
 
+variable "sqs_event_source_arn" {
+  description = "SQS queue ARN to use as Lambda event source trigger (optional)"
+  type        = string
+  default     = null
+}
+
 variable "sqs_queues" {
   description = "SQS queues the Lambda can access"
   type = list(object({
