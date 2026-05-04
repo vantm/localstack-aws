@@ -1,0 +1,3 @@
+#!/bin/sh
+curl "http://localhost:9000/2015-03-31/functions/function/invocations" \
+    -d '{ "filename": "John Doe_20260504_041149.txt" }'
