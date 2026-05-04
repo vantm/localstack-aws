@@ -4,6 +4,11 @@ variable "api_name" {
   default     = "documents-converter-api"
 }
 
+variable "region" {
+  description = "Region to put metrics"
+  type        = string
+}
+
 variable "api_description" {
   description = "Description of the API Gateway"
   type        = string
@@ -22,11 +27,6 @@ variable "convert_lambda_invoke_arn" {
 
 variable "watermark_lambda_invoke_arn" {
   description = "Invoke ARN of the watermark Lambda function"
-  type        = string
-}
-
-variable "authorizer_credentials_arn" {
-  description = "ARN of the role for API Gateway Authorizer credentials"
   type        = string
 }
 

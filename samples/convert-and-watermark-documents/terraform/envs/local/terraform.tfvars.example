@@ -9,7 +9,6 @@ watermark_text              = "CONFIDENTIAL"
 output_format               = "pdf"
 api_name                    = "documents-converter-api"
 api_description             = "API Gateway for document conversion and watermarking service"
-authorizer_credentials_arn  = "arn:aws:iam::000000000000:role/APIGatewayAuthorizerRole"
 monitoring_dashboard_name   = "documents-api-monitoring"
 logs_retention_in_days      = 7
 waf_name                    = "api-protection-waf"

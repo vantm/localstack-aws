@@ -91,7 +91,7 @@ resource "aws_lambda_permission" "api_gateway" {
 }
 
 resource "aws_lambda_event_source_mapping" "sqs" {
-  count = var.sqs_event_source_arn != null ? 1 : 0
+  count = var.sqs_event_source_enabled ? 1 : 0
 
   event_source_arn = var.sqs_event_source_arn
   function_name    = aws_lambda_function.function.arn

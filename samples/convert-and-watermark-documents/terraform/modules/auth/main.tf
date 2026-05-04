@@ -9,10 +9,6 @@ resource "aws_cognito_user_pool" "documents_pool" {
   }
 
   auto_verified_attributes = ["email"]
-
-  software_token_mfa_configuration {
-    enabled = false
-  }
 }
 
 resource "aws_cognito_user_pool_client" "documents_client" {

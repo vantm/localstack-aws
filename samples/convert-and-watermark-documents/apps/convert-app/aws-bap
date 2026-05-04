@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+ACCOUNT_ID="899483860865"
+REGION="ap-southeast-1"
+IMAGE_URL="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/convert-document:latest"
+
+docker buildx build --platform linux/amd64 --provenance=false -t $IMAGE_URL .
+docker push $IMAGE_URL

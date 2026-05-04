@@ -12,7 +12,6 @@ module "root" {
   output_format               = var.output_format
   api_name                    = var.api_name
   api_description             = var.api_description
-  authorizer_credentials_arn  = var.authorizer_credentials_arn
   monitoring_dashboard_name   = var.monitoring_dashboard_name
   logs_retention_in_days      = var.logs_retention_in_days
   waf_name                    = var.waf_name

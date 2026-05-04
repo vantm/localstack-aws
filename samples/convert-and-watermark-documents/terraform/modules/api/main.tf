@@ -56,11 +56,10 @@ resource "aws_api_gateway_integration" "watermark_lambda" {
 }
 
 resource "aws_api_gateway_authorizer" "cognito" {
-  name                   = "cognito-authorizer"
-  rest_api_id            = aws_api_gateway_rest_api.gateway_api.id
-  authorizer_credentials = var.authorizer_credentials_arn
-  type                   = "COGNITO_USER_POOLS"
-  provider_arns          = [var.user_pool_arn]
+  name          = "cognito-authorizer"
+  rest_api_id   = aws_api_gateway_rest_api.gateway_api.id
+  type          = "COGNITO_USER_POOLS"
+  provider_arns = [var.user_pool_arn]
 }
 
 resource "aws_api_gateway_deployment" "gateway_deployment" {
@@ -103,7 +102,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           ]
           period = 300
           stat   = "Sum"
-          region = "us-east-1"
+          region = var.region
         }
       },
       {
@@ -116,7 +115,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           ]
           period = 300
           stat   = "Sum"
-          region = "us-east-1"
+          region = var.region
         }
       },
       {
@@ -128,7 +127,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           ]
           period = 300
           stat   = "Sum"
-          region = "us-east-1"
+          region = var.region
         }
       },
       {
@@ -140,7 +139,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           ]
           period = 300
           stat   = "p99"
-          region = "us-east-1"
+          region = var.region
         }
       }
     ]

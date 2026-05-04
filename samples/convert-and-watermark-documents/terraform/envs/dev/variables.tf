@@ -42,10 +42,6 @@ variable "api_description" {
   type = string
 }
 
-variable "authorizer_credentials_arn" {
-  type = string
-}
-
 variable "monitoring_dashboard_name" {
   type = string
 }

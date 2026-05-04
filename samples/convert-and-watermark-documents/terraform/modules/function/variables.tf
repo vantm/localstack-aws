@@ -57,6 +57,12 @@ variable "sqs_event_source_arn" {
   default     = null
 }
 
+variable "sqs_event_source_enabled" {
+  description = "Enable SQS queue to use as Lambda event source trigger"
+  type        = bool
+  default     = false
+}
+
 variable "sqs_queues" {
   description = "SQS queues the Lambda can access"
   type = list(object({
