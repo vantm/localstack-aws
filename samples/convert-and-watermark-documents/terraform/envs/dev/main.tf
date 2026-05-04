@@ -1,6 +1,8 @@
 module "root" {
   source = "../../"
 
+  environment                 = var.environment
+  project_name                = var.project_name
   aws_region                  = var.aws_region
   dynamodb_table_name         = var.dynamodb_table_name
   dynamodb_access_policy_name = var.dynamodb_access_policy_name

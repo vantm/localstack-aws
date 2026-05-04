@@ -8,6 +8,13 @@ provider "aws" {
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
+  default_tags {
+    tags = {
+      Environment = var.environment
+      Project     = var.project_name
+    }
+  }
+
   endpoints {
     acm             = "http://localhost:4566"
     apigateway      = "http://localhost:4566"
@@ -36,6 +43,7 @@ provider "aws" {
     lambda          = "http://localhost:4566"
     logs            = "http://localhost:4566"
     rds             = "http://localhost:4566"
+    resourcegroups  = "http://localhost:4566"
     route53         = "http://localhost:4566"
     s3              = "http://localhost:4566"
     s3control       = "http://localhost:4566"

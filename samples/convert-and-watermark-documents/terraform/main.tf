@@ -1,3 +1,10 @@
+module "resourcegroups" {
+  source = "./modules/resourcegroups"
+
+  project_name = var.project_name
+  environment  = var.environment
+}
+
 module "database" {
   source = "./modules/database"
 
