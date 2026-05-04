@@ -25,18 +25,8 @@ variable "convert_lambda_invoke_arn" {
   type        = string
 }
 
-variable "watermark_lambda_invoke_arn" {
-  description = "Invoke ARN of the watermark Lambda function"
-  type        = string
-}
-
 variable "convert_lambda_name" {
   description = "Name of the convert Lambda function"
-  type        = string
-}
-
-variable "watermark_lambda_name" {
-  description = "Name of the watermark Lambda function"
   type        = string
 }
 

@@ -90,16 +90,14 @@ module "function_watermark" {
 module "api" {
   source = "./modules/api"
 
-  region                      = var.aws_region
-  api_name                    = var.api_name
-  api_description             = var.api_description
-  user_pool_arn               = module.auth.user_pool_arn
-  convert_lambda_invoke_arn   = module.function_convert.lambda_invoke_arn
-  watermark_lambda_invoke_arn = module.function_watermark.lambda_invoke_arn
-  convert_lambda_name         = module.function_convert.lambda_name
-  watermark_lambda_name       = module.function_watermark.lambda_name
-  logs_retention_in_days      = var.logs_retention_in_days
-  monitoring_dashboard_name   = var.monitoring_dashboard_name
+  region                    = var.aws_region
+  api_name                  = var.api_name
+  api_description           = var.api_description
+  user_pool_arn             = module.auth.user_pool_arn
+  convert_lambda_invoke_arn = module.function_convert.lambda_invoke_arn
+  convert_lambda_name       = module.function_convert.lambda_name
+  logs_retention_in_days    = var.logs_retention_in_days
+  monitoring_dashboard_name = var.monitoring_dashboard_name
 }
 
 # module "security" {
