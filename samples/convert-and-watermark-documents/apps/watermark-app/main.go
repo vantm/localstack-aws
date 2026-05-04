@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -28,17 +29,11 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
-func watermarkHandler(ctx context.Context, rawMessage json.RawMessage) error {
+func watermarkHandler(ctx context.Context, sqsEvent events.SQSEvent) (events.SQSEventResponse, error) {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Printf("Failed to load AWS SDK config: %v", err)
-		return err
-	}
-
-	var req WatermarkRequest
-	if err := json.Unmarshal(rawMessage, &req); err != nil {
-		log.Printf("Failed to unmarshal event: %v", err)
-		return err
+		return events.SQSEventResponse{}, err
 	}
 
 	s3c := s3.NewFromConfig(cfg, func(opts *s3.Options) {
@@ -49,39 +44,63 @@ func watermarkHandler(ctx context.Context, rawMessage json.RawMessage) error {
 	})
 
 	sourceBucket := getEnv("SOURCE_BUCKET", "convert-results")
-	resp, err := s3c.GetObject(ctx, &s3.GetObjectInput{
-		Bucket: aws.String(sourceBucket),
-		Key:    aws.String(req.Filename),
-	})
-	if err != nil {
-		log.Printf("Failed to read from source bucket %s/%s: %v", sourceBucket, req.Filename, err)
-		return err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Printf("Failed to read object body: %v", err)
-		return err
-	}
-
-	timestamp := time.Now().UTC().Format("20060102_150405")
-	destKey := fmt.Sprintf("watermarks/%s_%s.txt", strings.TrimSuffix(req.Filename, ".txt"), timestamp)
-	watermarked := string(body) + "Watermarked\n"
-
 	destBucket := getEnv("S3_BUCKET", "watermark-results")
-	if _, err := s3c.PutObject(ctx, &s3.PutObjectInput{
-		Bucket:      aws.String(destBucket),
-		Key:         aws.String(destKey),
-		Body:        bytes.NewReader([]byte(watermarked)),
-		ContentType: aws.String("text/plain"),
-	}); err != nil {
-		log.Printf("s3 upload error: %v", err)
-		return err
+
+	var batchItemFailures []events.SQSBatchItemFailure
+
+	for _, record := range sqsEvent.Records {
+		var req WatermarkRequest
+		if err := json.Unmarshal([]byte(record.Body), &req); err != nil {
+			log.Printf("Failed to unmarshal SQS message %s: %v", record.MessageId, err)
+			batchItemFailures = append(batchItemFailures, events.SQSBatchItemFailure{
+				ItemIdentifier: record.MessageId,
+			})
+			continue
+		}
+
+		resp, err := s3c.GetObject(ctx, &s3.GetObjectInput{
+			Bucket: aws.String(sourceBucket),
+			Key:    aws.String(req.Filename),
+		})
+		if err != nil {
+			log.Printf("Failed to read from source bucket %s/%s: %v", sourceBucket, req.Filename, err)
+			batchItemFailures = append(batchItemFailures, events.SQSBatchItemFailure{
+				ItemIdentifier: record.MessageId,
+			})
+			continue
+		}
+
+		body, readErr := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if readErr != nil {
+			log.Printf("Failed to read object body: %v", readErr)
+			batchItemFailures = append(batchItemFailures, events.SQSBatchItemFailure{
+				ItemIdentifier: record.MessageId,
+			})
+			continue
+		}
+
+		timestamp := time.Now().UTC().Format("20060102_150405")
+		destKey := fmt.Sprintf("watermarks/%s_%s.txt", strings.TrimSuffix(req.Filename, ".txt"), timestamp)
+		watermarked := string(body) + "Watermarked\n"
+
+		if _, err := s3c.PutObject(ctx, &s3.PutObjectInput{
+			Bucket:      aws.String(destBucket),
+			Key:         aws.String(destKey),
+			Body:        bytes.NewReader([]byte(watermarked)),
+			ContentType: aws.String("text/plain"),
+		}); err != nil {
+			log.Printf("s3 upload error: %v", err)
+			batchItemFailures = append(batchItemFailures, events.SQSBatchItemFailure{
+				ItemIdentifier: record.MessageId,
+			})
+			continue
+		}
+
+		log.Printf("file watermarked and saved to S3: %s", destKey)
 	}
 
-	log.Printf("file watermarked and saved to S3: %s", destKey)
-	return nil
+	return events.SQSEventResponse{BatchItemFailures: batchItemFailures}, nil
 }
 
 func main() {
