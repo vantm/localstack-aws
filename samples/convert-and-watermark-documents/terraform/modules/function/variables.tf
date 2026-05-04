@@ -41,3 +41,22 @@ variable "logs_retention_in_days" {
   type        = number
   default     = 7
 }
+
+variable "s3_buckets" {
+  description = "S3 buckets the Lambda can access"
+  type = list(object({
+    name       = string
+    policy_arn = string
+  }))
+  default = []
+}
+
+variable "sqs_queues" {
+  description = "SQS queues the Lambda can access"
+  type = list(object({
+    name       = string
+    url        = string
+    policy_arn = string
+  }))
+  default = []
+}

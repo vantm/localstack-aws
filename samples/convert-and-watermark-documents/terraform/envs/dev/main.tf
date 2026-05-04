@@ -16,4 +16,7 @@ module "root" {
   waf_name                    = var.waf_name
   waf_description             = var.waf_description
   waf_rate_limit              = var.waf_rate_limit
+  convert_result_bucket       = var.convert_result_bucket
+  watermark_result_bucket     = var.watermark_result_bucket
+  queue_name                  = var.queue_name
 }

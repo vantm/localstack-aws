@@ -43,8 +43,8 @@ func watermarkHandler(ctx context.Context, sqsEvent events.SQSEvent) (events.SQS
 		}
 	})
 
-	sourceBucket := getEnv("SOURCE_BUCKET", "convert-results")
-	destBucket := getEnv("S3_BUCKET", "watermark-results")
+	sourceBucket := getEnv("S3_BUCKET_0", "convert-results")
+	destBucket := getEnv("S3_BUCKET_1", "watermark-results")
 
 	var batchItemFailures []events.SQSBatchItemFailure
 

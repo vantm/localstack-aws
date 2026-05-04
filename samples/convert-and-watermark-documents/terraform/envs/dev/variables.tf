@@ -57,3 +57,15 @@ variable "waf_description" {
 variable "waf_rate_limit" {
   type = number
 }
+
+variable "convert_result_bucket" {
+  type = string
+}
+
+variable "watermark_result_bucket" {
+  type = string
+}
+
+variable "queue_name" {
+  type = string
+}

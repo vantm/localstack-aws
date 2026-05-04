@@ -12,6 +12,21 @@ module "auth" {
   user_pool_client_name = var.user_pool_client_name
 }
 
+module "bucket_convert" {
+  source = "./modules/bucket"
+  name   = var.convert_result_bucket
+}
+
+module "bucket_watermark" {
+  source = "./modules/bucket"
+  name   = var.watermark_result_bucket
+}
+
+module "sqs" {
+  source = "./modules/sqs"
+  name   = var.queue_name
+}
+
 module "function_convert" {
   source = "./modules/function"
 
@@ -23,6 +38,15 @@ module "function_convert" {
     OUTPUT_FORMAT = var.output_format
   }
   logs_retention_in_days = var.logs_retention_in_days
+  s3_buckets = [{
+    name       = module.bucket_convert.bucket_name
+    policy_arn = module.bucket_convert.policy_arn
+  }]
+  sqs_queues = [{
+    name       = module.sqs.queue_name
+    url        = module.sqs.queue_url
+    policy_arn = module.sqs.policy_arn
+  }]
 }
 
 module "function_watermark" {
@@ -36,6 +60,21 @@ module "function_watermark" {
     WATERMARK_TEXT = var.watermark_text
   }
   logs_retention_in_days = var.logs_retention_in_days
+  s3_buckets = [
+    {
+      name       = module.bucket_convert.bucket_name
+      policy_arn = module.bucket_convert.policy_arn
+    },
+    {
+      name       = module.bucket_watermark.bucket_name
+      policy_arn = module.bucket_watermark.policy_arn
+    }
+  ]
+  sqs_queues = [{
+    name       = module.sqs.queue_name
+    url        = module.sqs.queue_url
+    policy_arn = module.sqs.policy_arn
+  }]
 }
 
 module "api" {

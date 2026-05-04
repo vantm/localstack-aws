@@ -1,28 +1,3 @@
-resource "aws_s3_bucket" "results" {
-  bucket = "${var.name}-results"
-}
-
-resource "aws_iam_policy" "s3_access" {
-  name = "${var.name}-lambda-s3-access"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Action = [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:DeleteObject",
-        "s3:ListBucket"
-      ]
-      Resource = [
-        aws_s3_bucket.results.arn,
-        "${aws_s3_bucket.results.arn}/*"
-      ]
-    }]
-  })
-}
-
 resource "aws_ecr_repository" "function" {
   name = "${var.name}-document"
 }
@@ -73,8 +48,15 @@ resource "aws_iam_role_policy_attachment" "dynamodb" {
 }
 
 resource "aws_iam_role_policy_attachment" "s3" {
+  for_each   = { for i, b in var.s3_buckets : i => b }
   role       = aws_iam_role.lambda.name
-  policy_arn = aws_iam_policy.s3_access.arn
+  policy_arn = each.value.policy_arn
+}
+
+resource "aws_iam_role_policy_attachment" "sqs" {
+  for_each   = { for i, q in var.sqs_queues : i => q }
+  role       = aws_iam_role.lambda.name
+  policy_arn = each.value.policy_arn
 }
 
 resource "aws_lambda_function" "function" {
@@ -93,8 +75,9 @@ resource "aws_lambda_function" "function" {
       var.additional_env_vars,
       {
         DYNAMO_TABLE = var.dynamodb_table_name
-        S3_BUCKET    = aws_s3_bucket.results.id
-      }
+      },
+      { for idx, b in var.s3_buckets : "S3_BUCKET_${idx}" => b.name },
+      { for idx, q in var.sqs_queues : "SQS_QUEUE_${idx}" => q.url }
     )
   }
 }

@@ -17,6 +17,26 @@ variable "dynamodb_access_policy_name" {
   default     = "lambda-dynamodb-access"
 }
 
+# Bucket Variables
+variable "convert_result_bucket" {
+  description = "Name of the S3 bucket for convert results"
+  type        = string
+  default     = "convert-results"
+}
+
+variable "watermark_result_bucket" {
+  description = "Name of the S3 bucket for watermark results"
+  type        = string
+  default     = "watermark-results"
+}
+
+# SQS Variables
+variable "queue_name" {
+  description = "Name of the SQS queue"
+  type        = string
+  default     = "document-processing-queue"
+}
+
 # Auth Variables
 variable "user_pool_name" {
   description = "Name of the Cognito User Pool"

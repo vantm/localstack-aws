@@ -14,10 +14,3 @@ output "ecr_url" {
   value = aws_ecr_repository.function.repository_url
 }
 
-output "results_bucket_name" {
-  value = aws_s3_bucket.results.id
-}
-
-output "results_bucket_arn" {
-  value = aws_s3_bucket.results.arn
-}

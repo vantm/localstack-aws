@@ -13,3 +13,5 @@ logs_retention_in_days      = 7
 waf_name                    = "api-protection-waf"
 waf_description             = "WAF Web ACL for API Gateway protection"
 waf_rate_limit              = 100
+bucket_names                = ["convert-results", "watermark-results"]
+queue_name                  = "document-processing-queue"
