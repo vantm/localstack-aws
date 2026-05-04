@@ -26,4 +26,8 @@ resource "aws_cognito_user_pool_client" "documents_client" {
 
   callback_urls = var.callback_urls
   logout_urls   = var.logout_urls
+
+  allowed_oauth_flows          = ["code"]
+  allowed_oauth_scopes         = ["openid", "profile", "email"]
+  supported_identity_providers = ["COGNITO"]
 }
