@@ -1,10 +1,10 @@
-FROM golang:1.26 AS build
-WORKDIR /app
+FROM golang:1.26-alpine AS build
+WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN go build -tags lambda.norpc -o main .
+RUN GOOS=linux GOARCH=amd64 go build -o app
 
 FROM public.ecr.aws/lambda/provided:al2023
-COPY --from=build /app/main ./main
-ENTRYPOINT [ "./main" ]
+COPY --from=build /src/app ./app
+ENTRYPOINT [ "./app" ]

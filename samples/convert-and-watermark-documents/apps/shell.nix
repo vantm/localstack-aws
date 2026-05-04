@@ -1,8 +1,8 @@
 {
-  pkgs ? import ../../../../pkgs.nix,
+  pkgs ? import ../../../pkgs.nix,
 }:
 pkgs.mkShell {
-  name = "convert app";
+  name = "function apps";
   buildInputs = with pkgs; [
     go
     gopls

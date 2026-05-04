@@ -29,7 +29,7 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
-func convertHandler(ctx context.Context, event json.RawMessage) error {
+func convertHandler(ctx context.Context, rawMessage json.RawMessage) error {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Printf("Failed to load AWS SDK config: %v", err)
@@ -37,13 +37,13 @@ func convertHandler(ctx context.Context, event json.RawMessage) error {
 	}
 
 	var req ConvertRequest
-	if err := json.Unmarshal(event, &req); err != nil {
+	if err := json.Unmarshal(rawMessage, &req); err != nil {
 		log.Printf("Failed to unmarshal event: %v", err)
 		return err
 	}
 
 	timestamp := time.Now().UTC().Format("20060102_150405")
-	fileName := fmt.Sprintf("conversions/%s_%s.txt", req.Name, timestamp)
+	fileName := fmt.Sprintf("%s_%s.txt", req.Name, timestamp)
 	content := fmt.Sprintf("Name: %s\nAge: %d\nConverted: %s\n", req.Name, req.Age, time.Now().UTC().Format(time.RFC3339))
 
 	s3c := s3.NewFromConfig(cfg, func(opts *s3.Options) {
