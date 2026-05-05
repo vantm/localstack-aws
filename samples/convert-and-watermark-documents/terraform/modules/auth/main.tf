@@ -11,6 +11,11 @@ resource "aws_cognito_user_pool" "documents_pool" {
   auto_verified_attributes = ["email"]
 }
 
+resource "aws_cognito_user_pool_domain" "documents_domain" {
+  domain       = var.domain_prefix
+  user_pool_id = aws_cognito_user_pool.documents_pool.id
+}
+
 resource "aws_cognito_user_pool_client" "documents_client" {
   name            = var.user_pool_client_name
   user_pool_id    = aws_cognito_user_pool.documents_pool.id
@@ -30,4 +35,10 @@ resource "aws_cognito_user_pool_client" "documents_client" {
   allowed_oauth_flows          = ["code"]
   allowed_oauth_scopes         = ["openid", "profile", "email"]
   supported_identity_providers = ["COGNITO"]
+
+  explicit_auth_flows = [
+    "ALLOW_USER_AUTH",
+    "ALLOW_USER_SRP_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH"
+  ]
 }

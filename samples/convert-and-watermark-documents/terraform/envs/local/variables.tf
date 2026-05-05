@@ -26,6 +26,10 @@ variable "user_pool_client_name" {
   type = string
 }
 
+variable "domain_prefix" {
+  type = string
+}
+
 variable "callback_urls" {
   type = list(string)
 }

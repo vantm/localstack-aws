@@ -21,3 +21,9 @@ variable "logout_urls" {
   type        = list(string)
   default     = ["https://localhost"]
 }
+
+variable "domain_prefix" {
+  description = "Domain prefix for the Cognito User Pool domain"
+  type        = string
+  default     = "documents-auth"
+}

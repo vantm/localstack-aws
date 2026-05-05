@@ -62,6 +62,12 @@ variable "user_pool_client_name" {
   default     = "documents-api-client"
 }
 
+variable "domain_prefix" {
+  description = "Domain prefix for the Cognito User Pool domain"
+  type        = string
+  default     = "documents-auth"
+}
+
 variable "callback_urls" {
   description = "List of allowed callback URLs for the Cognito app client"
   type        = list(string)
